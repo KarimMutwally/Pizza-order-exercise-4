@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Npgsql" Version="5.0.10" />
+    <PackageReference Include="Npgsql.NetTopologySuite" Version="5.0.10" />
+    <PackageReference Include="SD.LLBLGen.Pro.DQE.Access" Version="5.8.2" />
+    <PackageReference Include="SD.LLBLGen.Pro.DQE.PostgreSql" Version="5.8.2" />
+    <PackageReference Include="SD.LLBLGen.Pro.ORMSupportClasses" Version="5.8.2" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Data\DatabaseGeneric\PizzaOrder.csproj" />
+    <ProjectReference Include="..\Data\DatabaseSpecific\PizzaOrderDBSpecific.csproj" />
+    <ProjectReference Include="..\Data\ToppingsOnPizza\ToppingsOnPizza.csproj"/>
+    <ProjectReference Include="..\Data\ToppingsOnPizza.Persistence\ToppingsOnPizza.Persistence.csproj"/>
+    <ProjectReference Include="..\Data\OrderWithPizza\OrderWithPizza.csproj"/>
+    <ProjectReference Include="..\Data\OrderWithPizza.Persistence\OrderWithPizza.Persistence.csproj"/>
+  </ItemGroup>
+
+</Project>
