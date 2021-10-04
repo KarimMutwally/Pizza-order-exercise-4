@@ -10,9 +10,10 @@ namespace PizzaUI.Pages
     {
         private readonly ILogger<IndexModel> _logger;
         private readonly HttpClient _httpClient;
-        public List<Pizza> menu { get; set; }
-        public string picLocation { get; set; }
-        public double pizzaPrice { get; set; }
+        public List<Pizza>? Menu { get; set; }
+        public string? PictureLocation { get; set; }
+        public double PizzaPrice { get; set; }
+        public List<Pizza>? PizzasSelected { get; set; } = new();
 
         public IndexModel(ILogger<IndexModel> logger, HttpClient httpClient)
         {
@@ -22,7 +23,19 @@ namespace PizzaUI.Pages
 
         public async Task OnGetAsync()
         {
-            menu = await _httpClient.GetFromJsonAsync<List<Pizza>>("http://localhost:5000/menu");
+            Menu = await _httpClient.GetFromJsonAsync<List<Pizza>>("http://localhost:5000/menu");  
+        }
+
+        public async Task OnPostAddPizzaAsync(int pizzaId)
+        {
+            Menu = await _httpClient.GetFromJsonAsync<List<Pizza>>("http://localhost:5000/menu");
+            var pizzaToAdd = from pizza in Menu
+                               where pizza.Id == pizzaId
+                               select pizza;
+            if (pizzaToAdd != null) 
+            {
+                PizzasSelected.Add(pizzaToAdd.Single());
+            }
         }
     }
 }

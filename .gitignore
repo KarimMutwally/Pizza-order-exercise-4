@@ -40,3 +40,4 @@ appSettings.json
 PizzaUI/PizzaUI/appsettings.Development.json
 *.sln
 PizzaAPI/appsettings.Development.json
+PizzaAPI/Orders/

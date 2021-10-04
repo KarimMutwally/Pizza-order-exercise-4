@@ -1,57 +1,64 @@
 ﻿@page
+@using PizzaUI.Models
 @model IndexModel
 @{
   ViewData["Title"] = "Home page";
 }
 
 <div class="row">
-  @foreach (var item in Model.menu)
+  @if (Model.Menu != null)
   {
-    Model.picLocation = "/Images/" + item.Name + ".jpg";
-    <div class="col-sm-6 col-lg-4 pb-4">
-      <div class="card " style="width: 18rem;">
-        <img src="@Model.picLocation" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">@item.Name</h5>
-          <p>
-            @foreach (var topping in item.Toppings)
-            {
-              @if (item.Toppings.IndexOf(topping) == item.Toppings.Count - 1)
+    @foreach (var item in Model.Menu)
+    {
+      Model.PictureLocation = "/Images/" + item.Name + ".jpg";
+      <div class="col-sm-6 col-lg-4 pb-4">
+        <div class="card " style="width: 18rem;">
+          <img src="@Model.PictureLocation" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">@item.Name</h5>
+            <p>
+              @foreach (var topping in item.Toppings)
               {
-                <span class="card-text">@topping.Name.</span>
+                @if (item.Toppings.IndexOf(topping) == item.Toppings.Count - 1)
+                {
+                  <span class="card-text">@topping.Name.</span>
+                }
+                else
+                {
+                  <span class="card-text">@topping.Name, </span>
+                }
               }
-              else
-              {
-                <span class="card-text">@topping.Name, </span>
-              }
-            }
-          </p>
-          <div class="container-fluid pb-3" >
-            <div class="form-check form-check-inline">
-              @{
-                Model.pizzaPrice = item.DefaultPrice * 1.2;
-              }
-              <input class="form-check-input" type="radio" name="@item.Name" id="@item.Name" value="@item.Name">
-              <label class="form-check-label" for="inlineRadio2">S: @Model.pizzaPrice</label>
+            </p>
+            <div class="container-fluid pb-3">
+              <div class="form-check form-check-inline">
+                @{
+                  Model.PizzaPrice = item.DefaultPrice * (int)Size.Small / 100;
+                }
+                
+                <span class="form-check-label" for="@item.Name@Size.Small">S: @Model.PizzaPrice</span>
+              </div>
+              <div class="form-check form-check-inline">
+                @{
+                  Model.PizzaPrice = item.DefaultPrice * (int)Size.Medium / 100;
+                }
+                
+                <span class="form-check-label" for="@item.Name@Size.Medium">M: @Model.PizzaPrice</span>
+              </div>
+              <div class="form-check form-check-inline">
+                @{
+                  Model.PizzaPrice = item.DefaultPrice * (int)Size.Large / 100; ;
+                }
+                
+                <span class="form-check-label" for="@item.Name@Size.Large">L: @Model.PizzaPrice</span>
+              </div>
             </div>
-            <div class="form-check form-check-inline">
-              @{
-                Model.pizzaPrice = item.DefaultPrice * 1.5;
-              }
-              <input class="form-check-input" type="radio" name="@item.Name" id="@item.Name" value="@item.Name">
-              <label class="form-check-label" for="inlineRadio2">M: @Model.pizzaPrice</label>
-            </div>
-            <div class="form-check form-check-inline">
-              @{
-                Model.pizzaPrice = item.DefaultPrice * 1.75;
-              }
-              <input class="form-check-input" type="radio" name="@item.Name" id="@item.Name" value="@item.Name">
-              <label class="form-check-label" for="inlineRadio2">L: @Model.pizzaPrice</label>
-            </div>
+            <form asp-page-handler="addpizza" asp-route-pizzaId="@item.Id" method="post">
+              <button class="btn btn-primary">Add to Order</button>
+            </form>
           </div>
-          <a href="#" class="btn btn-primary">Add to Order</a>
         </div>
       </div>
-    </div>
+      
+    }
   }
 </div>
