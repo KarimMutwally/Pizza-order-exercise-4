@@ -4,57 +4,83 @@
 @{
   ViewData["Title"] = "Home page";
 }
-
 <div class="row">
-  @if (Model.Menu != null)
-  {
-    @foreach (var item in Model.Menu)
-    {
-      Model.PictureLocation = "/Images/" + item.Name + ".jpg";
-      <div class="col-sm-6 col-lg-4 pb-4">
-        <div class="card " style="width: 18rem;">
-          <img src="@Model.PictureLocation" class="card-img-top" alt="...">
-          <div class="card-body">
-            <h5 class="card-title">@item.Name</h5>
-            <p>
-              @foreach (var topping in item.Toppings)
-              {
-                @if (item.Toppings.IndexOf(topping) == item.Toppings.Count - 1)
-                {
-                  <span class="card-text">@topping.Name.</span>
-                }
-                else
-                {
-                  <span class="card-text">@topping.Name, </span>
-                }
-              }
-            </p>
-            <div class="container-fluid pb-3">
-              <div class="form-check form-check-inline">
-                @{
-                  Model.PizzaPrice = item.DefaultPrice * (int)Size.Small / 100;
-                }
-                <span class="form-check-label" for="@item.Name@Size.Small">S: @Model.PizzaPrice</span>
-              </div>
-              <div class="form-check form-check-inline">
-                @{
-                  Model.PizzaPrice = item.DefaultPrice * (int)Size.Medium / 100;
-                }
-                <span class="form-check-label" for="@item.Name@Size.Medium">M: @Model.PizzaPrice</span>
-              </div>
-              <div class="form-check form-check-inline">
-                @{
-                  Model.PizzaPrice = item.DefaultPrice * (int)Size.Large / 100; ;
-                }
-                <span class="form-check-label" for="@item.Name@Size.Large">L: @Model.PizzaPrice</span>
+  <div class="col-lg-10">
+    <div class="row">
+      @if (Model.Menu != null)
+      {
+        @foreach (var item in Model.Menu)
+        {
+          Model.PictureLocation = "/Images/" + item.Name + ".jpg";
+          <div class="col-sm-6 col-lg-4 pb-4">
+            <div class="card">
+              <img src="@Model.PictureLocation" class="card-img-top" alt="...">
+              <div class="card-body">
+                <h5 class="card-title">@item.Name</h5>
+                <p>
+                  @foreach (var topping in item.Toppings)
+                  {
+                    @if (item.Toppings.IndexOf(topping) == item.Toppings.Count - 1)
+                    {
+                      <span class="card-text">@topping.Name.</span>
+                    }
+                    else
+                    {
+                      <span class="card-text">@topping.Name, </span>
+                    }
+                  }
+                </p>
+                <form asp-page-handler="addpizza" asp-route-pizzaID="@item.Id" method="post">
+                  <div class="container-fluid pb-3">
+                    <div class="form-check form-check-inline">
+                      @{
+                        Model.PizzaPrice = item.DefaultPrice * (int)Size.Small / 100;
+                      }
+                      <input class="form-check-input" type="radio" id="@item.Id@Size.Small" name="PizzaSize" value="Small">
+                      <label class="form-check-label" for="@item.Id@Size.Small">S: @Model.PizzaPrice</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      @{
+                        Model.PizzaPrice = item.DefaultPrice * (int)Size.Medium / 100;
+                      }
+                      <input class="form-check-input" type="radio" name="PizzaSize" id="@item.Id@Size.Medium"
+                    value="Medium">
+                      <label class="form-check-label" for="@item.Id@Size.Medium">M: @Model.PizzaPrice</label>
+                    </div>
+                    <br>
+                    <div class="form-check form-check-inline">
+                      @{
+                        Model.PizzaPrice = item.DefaultPrice * (int)Size.Large / 100; ;
+                      }
+                      <input class="form-check-input" type="radio" name="PizzaSize" id="@item.Id@Size.Large" value="Large">
+                      <label class="form-check-label" for="@item.Id@Size.Large">L: @Model.PizzaPrice</label>
+                    </div>
+                  </div>
+                  <button class="btn btn-primary">Add to Order</button>
+                </form>
               </div>
             </div>
-            <form asp-page-handler="addpizza" asp-route-pizzaId="@item.Id" method="post">
-              <button class="btn btn-primary">Add to Order</button>
-            </form>
           </div>
-        </div>
-      </div>
-    }
-  }
+        }
+      }
+    </div>
+  </div>
+  <div class="col-lg-2">
+    <div>
+      @if (Model.PizzasSelected != null)
+      {
+        @foreach (var item in Model.PizzasSelected)
+        {
+          <span>@item.Name </span>
+          <span>Size: @item.PizzaSize</span>
+          <span>$@item.Price.</span>
+          <br>
+        }
+        <form method="post" asp-page-handler="completeorder">
+          <input asp-for="ClientName">
+          <button class="btn btn-primary">Complete Order</button>
+        </form>
+      }
+    </div>
+  </div>
 </div>

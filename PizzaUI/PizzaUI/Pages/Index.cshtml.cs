@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using PizzaUI.Models;
 using System.Net.Http;
 using System.Net.Http.Json;
+using PizzaUI.Helpers;
 
 namespace PizzaUI.Pages
 {
@@ -13,8 +14,12 @@ namespace PizzaUI.Pages
         public List<Pizza>? Menu { get; set; }
         public string? PictureLocation { get; set; }
         public double PizzaPrice { get; set; }
-        public List<Pizza>? PizzasSelected { get; set; } = new();
-
+        public List<Pizza>? PizzasSelected { get; set; }
+        [BindProperty]
+        public string PizzaSize { get; set; }
+        [BindProperty]
+        public string ClientName { get; set; }
+       
         public IndexModel(ILogger<IndexModel> logger, HttpClient httpClient)
         {
             _logger = logger;
@@ -23,19 +28,47 @@ namespace PizzaUI.Pages
 
         public async Task OnGetAsync()
         {
-            Menu = await _httpClient.GetFromJsonAsync<List<Pizza>>("http://localhost:5000/menu");  
+            Menu = await _httpClient.GetFromJsonAsync<List<Pizza>>("http://localhost:5000/menu");
+            if (!HttpContext.Session.Keys.Contains("menu")) 
+            {
+                SessionHelper.SetObjectAsJson(HttpContext.Session, "menu", Menu);
+            };
+            PizzasSelected = SessionHelper.GetObjectFromJson<List<Pizza>>(HttpContext.Session, "cart");
         }
 
-        public async Task OnPostAddPizzaAsync(int pizzaId)
+        public void OnPostAddPizza(int pizzaID)
         {
-            Menu = await _httpClient.GetFromJsonAsync<List<Pizza>>("http://localhost:5000/menu");
-            var pizzaToAdd = from pizza in Menu
-                               where pizza.Id == pizzaId
-                               select pizza;
-            if (pizzaToAdd != null) 
+            ViewData["PizzaSize"] = PizzaSize;
+            Menu = SessionHelper.GetObjectFromJson<List<Pizza>>(HttpContext.Session, "menu");
+            if (Menu != null) 
             {
-                PizzasSelected.Add(pizzaToAdd.Single());
+                var pizzaToAdd = from pizza in Menu
+                                 where pizza.Id == pizzaID
+                                 select pizza;
+                if (pizzaToAdd != null)
+                {
+                    PizzasSelected = SessionHelper.GetObjectFromJson<List<Pizza>>(HttpContext.Session, "cart");
+                    if (PizzasSelected == null)
+                    {
+                        PizzasSelected = new();
+                    }
+                    pizzaToAdd.First().UpdateSize(PizzaSize);
+                    PizzasSelected.Add(pizzaToAdd.First());
+                    SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", PizzasSelected);
+                }
             }
+        }
+
+        public async Task<IActionResult> OnPostCompleteOrderAsync(string clientName) 
+        {
+            PizzasSelected = SessionHelper.GetObjectFromJson<List<Pizza>>(HttpContext.Session, "cart");
+            if (PizzasSelected != null)
+            {
+                Order order = new(clientName, PizzasSelected);
+                await _httpClient.PostAsJsonAsync<Order>("http://localhost:5000/order", order);
+                HttpContext.Session.Clear();
+            }
+            return RedirectToPage("Index");
         }
     }
 }

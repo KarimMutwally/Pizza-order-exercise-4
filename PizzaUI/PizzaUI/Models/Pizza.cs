@@ -53,7 +53,29 @@ namespace PizzaUI.Models
             return $"{this.Name} S:{this.DefaultPrice * ((double)Size.Small) / 100} " + 
                    $"M:{this.DefaultPrice * ((double)Size.Medium) / 100} " + 
                    $"L:{this.DefaultPrice * ((double)Size.Large) / 100} LE";
-        }  
+        }
+
+        public void UpdateSize(string size) 
+        {
+            var priceFactor = 0;
+            switch (size)
+            {
+                case "Small":
+                    priceFactor = 120;
+                    break;
+                case "Medium":
+                    priceFactor = 150;
+                    break;
+                case "Large":
+                    priceFactor = 175;
+                    break;
+                default:
+                    priceFactor = 0;
+                    break;
+            }
+            this.PizzaSize = size;
+            this.Price = this.DefaultPrice * priceFactor / 100;
+        }
     }
 
     public class Topping
