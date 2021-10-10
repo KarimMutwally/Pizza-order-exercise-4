@@ -78,9 +78,13 @@
         }
         <form method="post" asp-page-handler="completeorder">
           <input asp-for="ClientName">
+          <span asp-validation-for="ClientName"></span>
           <button class="btn btn-primary">Complete Order</button>
         </form>
       }
     </div>
   </div>
 </div>
+@section scripts{
+   <partial name="_ValidationScriptsPartial" />
+}

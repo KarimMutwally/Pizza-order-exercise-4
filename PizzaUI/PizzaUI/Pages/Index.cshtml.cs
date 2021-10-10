@@ -4,6 +4,7 @@ using PizzaUI.Models;
 using System.Net.Http;
 using System.Net.Http.Json;
 using PizzaUI.Helpers;
+using System.ComponentModel.DataAnnotations;
 
 namespace PizzaUI.Pages
 {
@@ -16,8 +17,10 @@ namespace PizzaUI.Pages
         public double PizzaPrice { get; set; }
         public List<Pizza>? PizzasSelected { get; set; }
         [BindProperty]
+        [Required]
         public string PizzaSize { get; set; }
         [BindProperty]
+        [Required]
         public string ClientName { get; set; }
        
         public IndexModel(ILogger<IndexModel> logger, HttpClient httpClient)
@@ -52,9 +55,12 @@ namespace PizzaUI.Pages
                     {
                         PizzasSelected = new();
                     }
-                    pizzaToAdd.First().UpdateSize(PizzaSize);
-                    PizzasSelected.Add(pizzaToAdd.First());
-                    SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", PizzasSelected);
+                    if (PizzaSize != null)
+                    {
+                        pizzaToAdd.First().UpdateSize(PizzaSize);
+                        PizzasSelected.Add(pizzaToAdd.First());
+                        SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", PizzasSelected);
+                    }
                 }
             }
         }
