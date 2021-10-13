@@ -1,0 +1,58 @@
+﻿@using PizzaUI.Models
+@model List<Topping>
+<!-- Modal -->
+<div class="modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Choose your toppings</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form asp-page-handler="AddCustomPizza">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Topping</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Picked</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+              {
+                          <tr>
+                              <th scope="row">@item.Name</th>
+                              <td>$@item.Price</td>
+                              <td><input name="selectedToppingsIds" type="checkbox" value="@item.Id"/></td>
+                          </tr>
+              }
+                </tbody>
+            </table>
+            <div class="input-group mb-3">
+                <input type="text" name="pizzaName" class="form-control" placeholder="Pizza Name" aria-label="pizza name">
+            </div>
+               <div class="container-fluid pb-3">
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="@Size.Small" name="PizzaSize" value="Small">
+                      <label class="form-check-label" for="@Size.Small">S</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="PizzaSize" id="@Size.Medium"
+                    value="Medium">
+                      <label class="form-check-label" for="@Size.Medium">M</label>
+                    </div>
+                    <div class="form-check form-check-inline">    
+                      <input class="form-check-input" type="radio" name="PizzaSize" id="@Size.Large" value="Large">
+                      <label class="form-check-label" for="@Size.Large">L</label>
+                    </div>
+                  </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-save="modal">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
