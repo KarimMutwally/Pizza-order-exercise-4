@@ -40,7 +40,7 @@ namespace PizzaUI.Pages
             PizzasSelected = SessionHelper.GetObjectFromJson<List<Pizza>>(HttpContext.Session, "cart");
         }
 
-        public void OnPostAddPizza(int pizzaID)
+        public IActionResult OnPostAddPizza(int pizzaID)
         {
             ViewData["PizzaSize"] = PizzaSize;
             Menu = SessionHelper.GetObjectFromJson<List<Pizza>>(HttpContext.Session, "menu");
@@ -64,6 +64,7 @@ namespace PizzaUI.Pages
                     }
                 }
             }
+            return RedirectToPage("index");
         }
 
         public async Task<IActionResult> OnPostCompleteOrderAsync(string clientName)

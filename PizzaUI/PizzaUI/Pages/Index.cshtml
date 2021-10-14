@@ -79,20 +79,29 @@
     </div>
   </div>
   <div class="col-lg-2">
-    <div>
+    <div class="card">
+        <div class="card-header">
+            Your order
+        </div>
       @if (Model.PizzasSelected != null)
       {
+         <ul list-group list-group-flush>
         @foreach (var item in Model.PizzasSelected)
         {
-          <span>@item.Name </span>
-          <span>Size: @item.PizzaSize</span>
-          <span>$@item.Price.</span>
-          <br>
+          <li>
+              <span>@item.Name </span>
+              <span>Size: @item.PizzaSize</span>
+              <span>$@item.Price.</span>
+              <br>
+          </li>
         }
+        </ul>
         <form method="post" asp-page-handler="completeorder">
-          <input asp-for="ClientName">
-          <span asp-validation-for="ClientName" class="text-danger"></span>
-          <button class="btn btn-primary">Complete Order</button>
+            <div class="input-group">
+                <input  class="form-control" asp-for="ClientName" placeholder="Enter your name">
+                <span asp-validation-for="ClientName" class="text-danger"></span>
+            </div>
+          <button class="btn btn-primary w-100">Complete Order</button>
         </form>
       }
     </div>

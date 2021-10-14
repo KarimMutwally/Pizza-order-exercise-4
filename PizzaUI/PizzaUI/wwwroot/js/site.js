@@ -18,6 +18,7 @@
 
         $.post(actionUrl, dataToSend).done(function (data) {
             placeholderElement.find('.modal').modal('hide');
+            location.reload();
         });
     });
 });
