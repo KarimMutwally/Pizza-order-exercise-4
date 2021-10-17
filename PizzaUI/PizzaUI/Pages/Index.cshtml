@@ -30,7 +30,7 @@
                     }
                   }
                 </p>
-                <form asp-page-handler="addpizza" asp-route-pizzaID="@item.Id" method="post">
+                <form asp-page-handler="AddPizza" asp-route-pizzaID="@item.Id" method="post">
                   <div class="container-fluid pb-3">
                     <div class="form-check form-check-inline">
                       @{
@@ -56,7 +56,7 @@
                       <label class="form-check-label" for="@item.Id@Size.Large">L: @Model.PizzaPrice</label>
                     </div>
                   </div>
-                  <button class="btn btn-primary">Add to Order</button>
+                  <button class="btn btn-danger">Add to Order</button>
                 </form>
               </div>
             </div>
@@ -71,7 +71,7 @@
             <p>Create your own pizza!</p>
             <p>Select as many toppigns as you like.</p>
             <div id="modal-placeholder"></div>
-            <button class="btn btn-primary" data-toggle="ajax-modal"
+            <button class="btn btn-danger" data-toggle="ajax-modal"
               data-url="@Url.Page("index","ChooseToppgingsModalPartial")">Customize now!</button>
           </div>
         </div>
@@ -89,19 +89,20 @@
         @foreach (var item in Model.PizzasSelected)
         {
           <li>
-              <span>@item.Name </span>
-              <span>Size: @item.PizzaSize</span>
-              <span>$@item.Price.</span>
+              <span>@item.Name Pizza </span>
               <br>
+              <span>Size: @item.PizzaSize </span>
+              <span>$@item.Price.</span>
           </li>
         }
         </ul>
-        <form method="post" asp-page-handler="completeorder">
+        <p>Total: $@Model.Total</p>
+        <form method="post" asp-page-handler="CompleteOrder">
             <div class="input-group">
                 <input  class="form-control" asp-for="ClientName" placeholder="Enter your name">
                 <span asp-validation-for="ClientName" class="text-danger"></span>
             </div>
-          <button class="btn btn-primary w-100">Complete Order</button>
+          <button class="btn btn-primary w-100">Complete Order</button>   
         </form>
       }
     </div>

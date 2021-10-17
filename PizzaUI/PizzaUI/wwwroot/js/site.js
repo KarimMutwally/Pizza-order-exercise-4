@@ -17,8 +17,17 @@
         var dataToSend = form.serialize();
 
         $.post(actionUrl, dataToSend).done(function (data) {
-            placeholderElement.find('.modal').modal('hide');
-            location.reload();
+            var newBody = $('.modal-body', data);
+            placeholderElement.find('.modal-body').replaceWith(newBody);
+            
+            var isValid = newBody.find('[name="IsValid"]').val() == 'true';
+            if (isValid) {
+                placeholderElement.find('.modal').modal('hide');
+                location.reload();
+            }
+            else {
+                alert("Please make sure that you fill all inputs.")
+            }
         });
     });
 });

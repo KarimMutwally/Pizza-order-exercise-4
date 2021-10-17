@@ -23,6 +23,7 @@ namespace PizzaUI.Pages
         [BindProperty]
         [Required]
         public string ClientName { get; set; }
+        public double Total { get; set; } = 0;
 
         public IndexModel(ILogger<IndexModel> logger, HttpClient httpClient)
         {
@@ -38,6 +39,11 @@ namespace PizzaUI.Pages
                 SessionHelper.SetObjectAsJson(HttpContext.Session, "menu", Menu);
             };
             PizzasSelected = SessionHelper.GetObjectFromJson<List<Pizza>>(HttpContext.Session, "cart");
+            if (PizzasSelected != null)
+            foreach (var pizza in PizzasSelected)
+            {
+                Total += pizza.Price;
+            }
         }
 
         public IActionResult OnPostAddPizza(int pizzaID)
@@ -82,6 +88,7 @@ namespace PizzaUI.Pages
         public async Task<PartialViewResult> OnGetChooseToppgingsModalPartialAsync()
         {
             this.Toppings = await _httpClient.GetFromJsonAsync<List<Topping>>("http://localhost:5000/toppings");
+            ViewData["validPizza"] = "false";
             return new PartialViewResult
             {
                 ViewName = "_ChooseToppings",
@@ -89,7 +96,7 @@ namespace PizzaUI.Pages
             };
         }
 
-        public async Task OnPostAddCustomPizzaAsync(List<int> selectedToppingsIds, string pizzaName)
+        public async Task<PartialViewResult> OnPostAddCustomPizzaAsync(List<int> selectedToppingsIds, string pizzaName)
         {
             Toppings = await _httpClient.GetFromJsonAsync<List<Topping>>("http://localhost:5000/toppings");
             PizzasSelected = SessionHelper.GetObjectFromJson<List<Pizza>>(HttpContext.Session, "cart");
@@ -97,8 +104,9 @@ namespace PizzaUI.Pages
             {
                 PizzasSelected = new();
             }
-            if (PizzaSize != null)
+            if (PizzaSize != null && selectedToppingsIds != null && pizzaName != null)
             {
+                ViewData["validPizza"] = "true";
                 List<Topping> selectedToppings = new();
                 foreach (int id in selectedToppingsIds)
                 {
@@ -114,6 +122,11 @@ namespace PizzaUI.Pages
                 PizzasSelected.Add(customPizzaToAdd);
                 SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", PizzasSelected);
             }
+            return new PartialViewResult
+            {
+                ViewName = "_ChooseToppings",
+                ViewData = new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary<List<Topping>>(ViewData, this.Toppings)
+            };
         }
     }
 }

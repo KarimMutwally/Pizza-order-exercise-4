@@ -10,6 +10,7 @@
       </div>
       <div class="modal-body">
         <form asp-page-handler="AddCustomPizza">
+            <input  name="IsValid" type="hidden" value="@ViewData["validPizza"]"/>
             <table class="table">
                 <thead>
                     <tr>
@@ -19,18 +20,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model)
-              {
-                          <tr>
-                              <th scope="row">@item.Name</th>
-                              <td>$@item.Price</td>
-                              <td><input name="selectedToppingsIds" type="checkbox" value="@item.Id"/></td>
-                          </tr>
-              }
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <th scope="row">@item.Name</th>
+                        <td>$@item.Price</td>
+                        <td><input name="selectedToppingsIds" type="checkbox" value="@item.Id"/></td>
+                  </tr>
+                }
                 </tbody>
             </table>
             <div class="input-group mb-3">
-                <input type="text" name="pizzaName" class="form-control" placeholder="Pizza Name" aria-label="pizza name">
+                <input type="text" name="pizzaName" class="form-control" placeholder="Pizza Name" aria-label="pizza name" required>
             </div>
                <div class="container-fluid pb-3">
                     <div class="form-check form-check-inline">
